@@ -1,0 +1,2 @@
+docker run -d -p 80:3000 -e OPENAI_API_KEY="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" -e BASE_URL="http://18.237.118.86:9000" yidadaa/chatgpt-next-web
+
