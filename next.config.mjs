@@ -12,6 +12,7 @@ const nextConfig = {
     return config;
   },
   output: mode,
+  productionBrowserSourceMaps: true,
   images: {
     unoptimized: mode === "export",
   },

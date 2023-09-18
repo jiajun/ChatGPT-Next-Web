@@ -1,5 +1,4 @@
 import md5 from "spark-md5";
-import mysql from "mysql";
 
 declare global {
   namespace NodeJS {
@@ -16,22 +15,6 @@ declare global {
     }
   }
 }
-
-// const connection = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PWD,
-//   database: process.env.DB_NAME,
-// });
-
-// 连接到数据库
-// connection.connect((err: string) => {
-//   if (err) {
-//     console.error('Failed to connect to MySQL database:', err);
-//   } else {
-//     console.log('Connected to MySQL database');
-//   }
-// });
 
 const ACCESS_CODES = (function getAccessCodes(): Set<string> {
   const code = process.env.CODE;

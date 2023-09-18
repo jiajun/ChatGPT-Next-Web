@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { ACCESS_CODE_PREFIX } from "../constant";
+// import excuteQuery  from "./db.js";
+import mysql from "serverless-mysql";
 
 function getIP(req: NextRequest) {
   let ip = req.ip ?? req.headers.get("x-real-ip");
@@ -29,11 +31,34 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-export function auth(req: NextRequest) {
+const clientCode = process.env.CLIENT_CODE;
+
+async function excuteQuery(query: string, values: Array<any>) {
+  try {
+    const db = mysql({
+      config: {
+        host: "jiajun-ubuntu",
+        port: 3306,
+        database: "bloghome3",
+        user: "root",
+        password: "root",
+      },
+    });
+
+    console.log("[db.config]", db.getConfig());
+    const results = await db.query(query, values);
+    await db.end();
+    return results;
+  } catch (error) {
+    return { error };
+  }
+}
+
+export async function auth(req: NextRequest) {
   const authToken = req.headers.get("Authorization") ?? "";
 
   // check if it is openai api key or user token
-  const { accessCode, apiKey: token } = parseApiKey(authToken);
+  const { userName, accessCode, apiKey: token } = parseApiKey(authToken);
 
   // const hashedCode = md5.hash(accessCode ?? "").trim();
 
@@ -43,12 +68,32 @@ export function auth(req: NextRequest) {
   // console.log("[Auth] hashed access code:", accessCode);
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
+  console.log("[clientCode]", clientCode);
 
-  if (serverConfig.needCode && !serverConfig.codes.has(accessCode) && !token) {
-    return {
-      error: true,
-      msg: !accessCode ? "empty access code" : "wrong access code",
-    };
+  if (serverConfig.needCode && !token) {
+    const results = await excuteQuery(
+      "select * from ai_users where client_id=?",
+      [1],
+    );
+    console.log("results: ", results);
+
+    // @ts-ignore
+    let user = results.map(
+      (result: { user_name: string; password: string }) => {
+        if (result.user_name == userName && result.password == accessCode) {
+          return result;
+        }
+      },
+    );
+
+    console.log("user: ", user);
+
+    if (!user) {
+      return {
+        error: true,
+        msg: !accessCode ? "empty access code" : "wrong access code",
+      };
+    }
   }
 
   // if user does not provide an api key, inject system api key
