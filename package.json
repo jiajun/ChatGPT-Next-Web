@@ -19,9 +19,12 @@
     "@fortaine/fetch-event-source": "^3.0.6",
     "@hello-pangea/dnd": "^16.2.0",
     "@svgr/webpack": "^6.5.1",
-    "@vercel/analytics": "^0.1.11",
     "@types/mysql": "^2.15.21",
+    "@vercel/analytics": "^0.1.11",
+    "axios": "^1.5.0",
     "child_process": "^1.0.2",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
     "emoji-picker-react": "^4.4.7",
     "fs": "^0.0.1-security",
     "fuse.js": "^6.6.2",
@@ -30,7 +33,9 @@
     "mysql": "^2.18.1",
     "net": "^1.0.2",
     "next": "^13.4.6",
-    "node-fetch": "^3.3.1",
+    "node-fetch": "^3.3.2",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
@@ -68,11 +73,5 @@
   },
   "resolutions": {
     "lint-staged/yaml": "^2.2.2"
-  },
-  "browser": {
-    "crypto": false,
-    "fs": false,
-    "os": false,
-    "path": false
   }
 }

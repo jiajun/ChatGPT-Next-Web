@@ -1,8 +1,6 @@
 import { NextRequest } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import { ACCESS_CODE_PREFIX } from "../constant";
-// import excuteQuery  from "./db.js";
-import mysql from "serverless-mysql";
 
 function getIP(req: NextRequest) {
   let ip = req.ip ?? req.headers.get("x-real-ip");
@@ -33,26 +31,26 @@ function parseApiKey(bearToken: string) {
 
 const clientCode = process.env.CLIENT_CODE;
 
-async function excuteQuery(query: string, values: Array<any>) {
-  try {
-    const db = mysql({
-      config: {
-        host: "jiajun-ubuntu",
-        port: 3306,
-        database: "bloghome3",
-        user: "root",
-        password: "root",
-      },
-    });
+// async function excuteQuery(query: string, values: Array<any>) {
+//   try {
+//     const db = await mysql({
+//       config: {
+//         host: "192.168.17.139",
+//         port: 3306,
+//         database: "bloghome3",
+//         user: "root",
+//         password: "root",
+//       },
+//     });
 
-    console.log("[db.config]", db.getConfig());
-    const results = await db.query(query, values);
-    await db.end();
-    return results;
-  } catch (error) {
-    return { error };
-  }
-}
+//     console.log("[db.config]", db.getConfig());
+//     const results = await db.query(query, values);
+//     await db.end();
+//     return results;
+//   } catch (error) {
+//     return { error };
+//   }
+// }
 
 export async function auth(req: NextRequest) {
   const authToken = req.headers.get("Authorization") ?? "";
@@ -69,16 +67,19 @@ export async function auth(req: NextRequest) {
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
   console.log("[clientCode]", clientCode);
+  console.log("[userName]", userName);
 
   if (serverConfig.needCode && !token) {
-    const results = await excuteQuery(
-      "select * from ai_users where client_id=?",
-      [1],
-    );
+    const results = await (
+      await fetch(
+        `http://127.0.0.1:7001/uac/user/findOne?clientCode=${clientCode}&userName=${userName}`,
+      )
+    ).json();
+
     console.log("results: ", results);
 
     // @ts-ignore
-    let user = results.map(
+    let user = results.user.map(
       (result: { user_name: string; password: string }) => {
         if (result.user_name == userName && result.password == accessCode) {
           return result;
@@ -88,10 +89,10 @@ export async function auth(req: NextRequest) {
 
     console.log("user: ", user);
 
-    if (!user) {
+    if (!user || !user[0]) {
       return {
         error: true,
-        msg: !accessCode ? "empty access code" : "wrong access code",
+        msg: !accessCode ? "密码为空" : "密码不正确",
       };
     }
   }
