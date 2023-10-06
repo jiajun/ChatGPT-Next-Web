@@ -13,21 +13,21 @@ function getIP(req: NextRequest) {
   return ip;
 }
 
-function parseApiKey(bearToken: string) {
-  console.log("auth.ts: bearToken: " + bearToken);
-  const token = bearToken.trim().replaceAll("Bearer ", "").trim();
-  const isOpenAiKey = !token.startsWith(ACCESS_CODE_PREFIX);
+// function parseApiKey(bearToken: string) {
+//   console.log("auth.ts: bearToken: " + bearToken);
+//   const token = bearToken.trim().replaceAll("Bearer ", "").trim();
+//   const isOpenAiKey = !token.startsWith(ACCESS_CODE_PREFIX);
 
-  const authStrs = isOpenAiKey
-    ? []
-    : token.slice(ACCESS_CODE_PREFIX.length).split("||");
+//   const authStrs = isOpenAiKey
+//     ? []
+//     : token.slice(ACCESS_CODE_PREFIX.length).split("||");
 
-  return {
-    userName: isOpenAiKey ? "" : authStrs[0],
-    accessCode: isOpenAiKey ? "" : authStrs[1],
-    apiKey: isOpenAiKey ? token : "",
-  };
-}
+//   return {
+//     userName: isOpenAiKey ? "" : authStrs[0],
+//     accessCode: isOpenAiKey ? "" : authStrs[1],
+//     apiKey: isOpenAiKey ? token : "",
+//   };
+// }
 
 const clientCode = process.env.CLIENT_CODE;
 
@@ -56,61 +56,42 @@ export async function auth(req: NextRequest) {
   const authToken = req.headers.get("Authorization") ?? "";
 
   // check if it is openai api key or user token
-  const { userName, accessCode, apiKey: token } = parseApiKey(authToken);
+  // const { userName, accessCode, apiKey: token } = parseApiKey(authToken);
 
   // const hashedCode = md5.hash(accessCode ?? "").trim();
 
   const serverConfig = getServerSideConfig();
   console.log("[Auth] allowed hashed codes: ", [...serverConfig.codes]);
-  console.log("[Auth] got access code:", accessCode);
+  // console.log("[Auth] got access code:", accessCode);
   // console.log("[Auth] hashed access code:", accessCode);
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
   console.log("[clientCode]", clientCode);
-  console.log("[userName]", userName);
+  // console.log("[userName]", userName);
 
-  if (serverConfig.needCode && !token) {
+  if (authToken) {
     const results = await (
-      await fetch(
-        `http://127.0.0.1:7001/uac/user/findOne?clientCode=${clientCode}&userName=${userName}`,
-      )
+      await fetch("http://127.0.0.1:7001/uac/auth/check", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      })
     ).json();
 
     console.log("results: ", results);
 
-    // @ts-ignore
-    let user = results.user.map(
-      (result: { user_name: string; password: string }) => {
-        if (result.user_name == userName && result.password == accessCode) {
-          return result;
-        }
-      },
-    );
-
-    console.log("user: ", user);
-
-    if (!user || !user[0]) {
+    if (results.error == true) {
+      return results;
+    } else {
       return {
-        error: true,
-        msg: !accessCode ? "密码为空" : "密码不正确",
+        error: false,
       };
     }
-  }
-
-  // if user does not provide an api key, inject system api key
-  if (!token) {
-    const apiKey = serverConfig.apiKey;
-    if (apiKey) {
-      console.log("[Auth] use system api key");
-      req.headers.set("Authorization", `Bearer ${apiKey}`);
-    } else {
-      console.log("[Auth] admin did not provide an api key");
-    }
   } else {
-    console.log("[Auth] use user api key");
+    return {
+      error: true,
+    };
   }
-
-  return {
-    error: false,
-  };
 }

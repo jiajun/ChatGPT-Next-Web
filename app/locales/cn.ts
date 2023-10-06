@@ -23,6 +23,13 @@ const cn = {
     Confirm: "确认",
     Later: "稍后再说",
   },
+  Login: {
+    Title: "登录",
+    Tips: "请在下方填入用户名，密码",
+    UserName: "在此处填写用户名",
+    Password: "在此处填写密码",
+    Confirm: "确认",
+  },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },

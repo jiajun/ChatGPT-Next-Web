@@ -53,6 +53,7 @@ export const OpenaiPath = {
   UsagePath: "dashboard/billing/usage",
   SubsPath: "dashboard/billing/subscription",
   ResetPassword: "resetPassword",
+  Login: "login",
 };
 
 export const DEFAULT_INPUT_TEMPLATE = `

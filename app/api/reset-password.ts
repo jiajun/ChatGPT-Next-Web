@@ -38,6 +38,7 @@ export async function ResetPassword(req: NextRequest) {
     }),
     headers: {
       "Content-Type": "application/json",
+      Authorization: authToken,
     },
   });
 
@@ -45,15 +46,5 @@ export async function ResetPassword(req: NextRequest) {
 
   console.log("results: ", resJason);
 
-  // @ts-ignore
-  if (!resJason || resJason.affectedRows !== 1) {
-    return {
-      error: true,
-      msg: "用户名或密码错误，无法重置密码",
-    };
-  } else {
-    return {
-      error: false,
-    };
-  }
+  return resJason;
 }
