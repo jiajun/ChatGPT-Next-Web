@@ -65,7 +65,24 @@ export const useAccessStore = create<AccessControlStore>()(
           !!get().token || !!get().accessCode || !get().enabledAccessControl()
         );
       },
-
+      doUpdatePassword(
+        userName: string,
+        password: string,
+        newPassword: string,
+      ) {
+        fetch("/api/updatePassword", {
+          method: "post",
+          body: JSON.stringify({
+            //post请求参数
+            userName: userName,
+            password: password,
+            newPassword: newPassword,
+          }),
+          headers: {
+            ...getHeaders(),
+          },
+        }).then((res) => res.json());
+      },
       fetch() {
         if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
         fetchState = 1;

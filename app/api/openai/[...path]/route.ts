@@ -2,7 +2,10 @@ import { OpenaiPath } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
+import { ResetPassword } from "../../reset-password";
 import { requestOpenai } from "../../common";
+
+console.log("haha");
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
 
@@ -29,6 +32,16 @@ async function handle(
         status: 403,
       },
     );
+  }
+
+  console.log("subpath: " + subpath);
+
+  if (subpath == OpenaiPath.ResetPassword) {
+    const resetPassword = await ResetPassword(req);
+    // @ts-ignore
+    return NextResponse.json(resetPassword, {
+      status: 200,
+    });
   }
 
   const authResult = await auth(req);

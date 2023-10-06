@@ -25,8 +25,18 @@ export function AuthPage() {
 
       <input
         className={styles["auth-input"]}
+        type="text"
+        placeholder={Locale.Auth.UserName}
+        value={access.userName}
+        onChange={(e) => {
+          access.updateUserName(e.currentTarget.value);
+        }}
+      />
+
+      <input
+        className={styles["auth-input"]}
         type="password"
-        placeholder={Locale.Auth.Input}
+        placeholder={Locale.Auth.Password}
         value={access.accessCode}
         onChange={(e) => {
           access.updateCode(e.currentTarget.value);

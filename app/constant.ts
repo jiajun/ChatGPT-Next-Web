@@ -15,6 +15,7 @@ export enum Path {
   NewChat = "/new-chat",
   Masks = "/masks",
   Auth = "/auth",
+  ResetPasword = "/reset-password",
 }
 
 export enum SlotID {
@@ -51,6 +52,7 @@ export const OpenaiPath = {
   ChatPath: "v1/chat/completions",
   UsagePath: "dashboard/billing/usage",
   SubsPath: "dashboard/billing/subscription",
+  ResetPassword: "resetPassword",
 };
 
 export const DEFAULT_INPUT_TEMPLATE = `
