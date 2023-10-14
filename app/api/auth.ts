@@ -53,7 +53,8 @@ const clientCode = process.env.CLIENT_CODE;
 // }
 
 export async function auth(req: NextRequest) {
-  const authToken = req.headers.get("Authorization") ?? "";
+  let authToken = req.headers.get("Authorization") ?? "";
+  authToken = authToken.substring(7, authToken.length);
 
   // check if it is openai api key or user token
   // const { userName, accessCode, apiKey: token } = parseApiKey(authToken);
@@ -67,6 +68,7 @@ export async function auth(req: NextRequest) {
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
   console.log("[clientCode]", clientCode);
+  console.log("[authToken]", authToken);
   // console.log("[userName]", userName);
 
   if (authToken) {
@@ -75,7 +77,7 @@ export async function auth(req: NextRequest) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: authToken,
+          token: authToken,
         },
       })
     ).json();

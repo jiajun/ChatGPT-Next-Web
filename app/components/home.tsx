@@ -58,6 +58,10 @@ const ResetPassword = dynamic(
   },
 );
 
+const Login = dynamic(async () => (await import("./login")).Login, {
+  loading: () => <Loading noLogo />,
+});
+
 export function useSwitchTheme() {
   const config = useAppConfig();
 
@@ -150,6 +154,7 @@ function Screen() {
               <Route path={Path.Chat} element={<Chat />} />
               <Route path={Path.Settings} element={<Settings />} />
               <Route path={Path.ResetPasword} element={<ResetPassword />} />
+              <Route path={Path.Login} element={<Login />} />
             </Routes>
           </div>
         </>

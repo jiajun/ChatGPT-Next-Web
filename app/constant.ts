@@ -16,6 +16,7 @@ export enum Path {
   Masks = "/masks",
   Auth = "/auth",
   ResetPasword = "/reset-password",
+  Login = "/login",
 }
 
 export enum SlotID {
