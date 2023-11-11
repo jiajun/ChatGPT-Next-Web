@@ -7,23 +7,24 @@ import { useAccessStore } from "@/app/store";
 import Locale from "../locales";
 import md5 from "spark-md5";
 import { useState } from "react";
+import EyeIcon from "../icons/eye.svg";
+import EyeOffIcon from "../icons/eye-off.svg";
 
 import BotIcon from "../icons/bot.svg";
 
 export function Login() {
   const navigate = useNavigate();
   const goHome = () => navigate(Path.Home);
-
-  const [loginUserName, setLoginUserName] = useState("");
-  const [loginPassword, setPassword] = useState("");
+  const access = useAccessStore();
   const [loginMsg, setLoginMsg] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const doLogin = async () => {
     const result = await fetch("/api/openai/login", {
       method: "post",
       body: JSON.stringify({
-        userName: loginUserName,
-        password: md5.hash(loginPassword),
+        userName: access.userName,
+        password: md5.hash(access.password),
       }),
     });
 
@@ -41,6 +42,10 @@ export function Login() {
     }
   };
 
+  function changeVisibility() {
+    setVisible(!visible);
+  }
+
   return (
     <div className={styles["auth-page"]}>
       <div className={`no-dark ${styles["auth-logo"]}`}>
@@ -54,19 +59,19 @@ export function Login() {
         className={styles["auth-input"]}
         type="text"
         placeholder={Locale.Login.UserName}
-        value={loginUserName}
+        value={access.userName}
         onChange={(e) => {
-          setLoginUserName(e.currentTarget.value);
+          access.updateUserName(e.currentTarget.value);
         }}
       />
 
       <input
         className={styles["auth-input"]}
-        type="password"
+        type={visible ? "text" : "password"}
         placeholder={Locale.Login.Password}
-        value={loginPassword}
+        value={access.password}
         onChange={(e) => {
-          setPassword(e.currentTarget.value);
+          access.updatePassword(e.currentTarget.value);
         }}
       />
 

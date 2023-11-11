@@ -34,6 +34,7 @@ export async function Login(req: NextRequest) {
       clientCode: clientCode,
       userName: body.userName,
       password: body.password,
+      ip: getIP(req),
     }),
     headers: {
       "Content-Type": "application/json",

@@ -5,10 +5,11 @@ const DEFAULT_PROTOCOL = "https";
 const PROTOCOL = process.env.PROTOCOL ?? DEFAULT_PROTOCOL;
 const BASE_URL = process.env.BASE_URL ?? OPENAI_URL;
 const DISABLE_GPT4 = !!process.env.DISABLE_GPT4;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
-  const authValue = req.headers.get("Authorization") ?? "";
+  const authValue = `Bearer ${OPENAI_API_KEY}`;
   const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
     "/api/openai/",
     "",
