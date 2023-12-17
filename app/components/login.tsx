@@ -64,16 +64,22 @@ export function Login() {
           access.updateUserName(e.currentTarget.value);
         }}
       />
-
-      <input
-        className={styles["auth-input"]}
-        type={visible ? "text" : "password"}
-        placeholder={Locale.Login.Password}
-        value={access.password}
-        onChange={(e) => {
-          access.updatePassword(e.currentTarget.value);
-        }}
-      />
+      <div className={"password-input-container"}>
+        <input
+          className={styles["auth-input"]}
+          type={visible ? "text" : "password"}
+          placeholder={Locale.Login.Password}
+          value={access.password}
+          onChange={(e) => {
+            access.updatePassword(e.currentTarget.value);
+          }}
+        />
+        <IconButton
+          icon={visible ? <EyeIcon /> : <EyeOffIcon />}
+          onClick={changeVisibility}
+          className={"password-eye"}
+        />
+      </div>
 
       <div className={styles["login-msg-result"]}>{loginMsg}</div>
 

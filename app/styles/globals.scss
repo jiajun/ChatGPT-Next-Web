@@ -322,12 +322,14 @@ pre {
 }
 
 .password-input-container {
-  max-width: 50%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-left:40px;
 
   .password-eye {
-    margin-right: 4px;
+    margin-left: 4px;
   }
 
   .password-input {

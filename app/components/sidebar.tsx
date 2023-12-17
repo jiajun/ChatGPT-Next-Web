@@ -23,6 +23,7 @@ import {
   NARROW_SIDEBAR_WIDTH,
   Path,
   REPO_URL,
+  Bloghome_URL,
 } from "../constant";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -132,17 +133,19 @@ export function SideBar(props: { className?: string }) {
 
       <div className={styles["sidebar-header-bar"]}>
         <IconButton
-          icon={<MaskIcon />}
-          text={shouldNarrow ? undefined : Locale.Mask.Name}
+          icon={<LoginIcon />}
+          text={shouldNarrow ? undefined : Locale.Login.Title}
           className={styles["sidebar-bar-button"]}
-          onClick={() => navigate(Path.NewChat, { state: { fromHome: true } })}
+          onClick={() => navigate(Path.Login, { state: { fromHome: true } })}
           shadow
         />
         <IconButton
-          icon={<PluginIcon />}
-          text={shouldNarrow ? undefined : Locale.Plugin.Name}
+          icon={<ResetPasswordIcon />}
+          text={shouldNarrow ? undefined : Locale.ResetPassword.Title}
           className={styles["sidebar-bar-button"]}
-          onClick={() => showToast(Locale.WIP)}
+          onClick={() =>
+            navigate(Path.ResetPasword, { state: { fromHome: true } })
+          }
           shadow
         />
       </div>
@@ -170,36 +173,40 @@ export function SideBar(props: { className?: string }) {
               }}
             />
           </div>
-          <div className={styles["sidebar-action"]}>
-            <Link to={Path.Login}>
-              <IconButton icon={<LoginIcon />} shadow />
-            </Link>
-          </div>
-          <div className={styles["sidebar-action"]}>
-            <Link to={Path.Settings}>
-              <IconButton icon={<SettingsIcon />} shadow />
-            </Link>
-          </div>
-          <div className={styles["sidebar-action"]}>
-            <Link to={Path.ResetPasword}>
-              <IconButton icon={<ResetPasswordIcon />} shadow />
-            </Link>
-          </div>
-        </div>
-        <div>
           <IconButton
-            icon={<AddIcon />}
-            text={shouldNarrow ? undefined : Locale.Home.NewChat}
-            onClick={() => {
-              if (config.dontShowMaskSplashScreen) {
-                chatStore.newSession();
-                navigate(Path.Chat);
-              } else {
-                navigate(Path.NewChat);
-              }
-            }}
+            icon={<MaskIcon />}
+            text={shouldNarrow ? undefined : Locale.Mask.Name}
+            className={styles["sidebar-bar-button"]}
+            onClick={() =>
+              navigate(Path.NewChat, { state: { fromHome: true } })
+            }
             shadow
           />
+          &nbsp; &nbsp;
+          <div className={styles["sidebar-action"]}>
+            <a href={Bloghome_URL} target="_blank">
+              <IconButton
+                icon={<PluginIcon />}
+                text={shouldNarrow ? undefined : Locale.Bloghome.Name}
+                className={styles["sidebar-bar-button"]}
+              />
+            </a>
+          </div>
+          <div>
+            <IconButton
+              icon={<AddIcon />}
+              text={shouldNarrow ? undefined : Locale.Home.NewChat}
+              onClick={() => {
+                if (config.dontShowMaskSplashScreen) {
+                  chatStore.newSession();
+                  navigate(Path.Chat);
+                } else {
+                  navigate(Path.NewChat);
+                }
+              }}
+              shadow
+            />
+          </div>
         </div>
       </div>
 

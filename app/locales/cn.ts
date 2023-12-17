@@ -6,6 +6,9 @@ const cn = {
     Unauthorized:
       "访问密码不正确或为空，请前往[登录](/#/login)页输入正确的访问密码。",
   },
+  Bloghome: {
+    Name: "博客",
+  },
   Auth: {
     Title: "需要用户名和密码",
     Tips: "管理员开启了密码验证，请在下方填入用户名和密码",

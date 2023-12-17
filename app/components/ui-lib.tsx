@@ -232,15 +232,15 @@ export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
 
   return (
     <div className={"password-input-container"}>
-      <IconButton
-        icon={visible ? <EyeIcon /> : <EyeOffIcon />}
-        onClick={changeVisibility}
-        className={"password-eye"}
-      />
       <input
         {...props}
         type={visible ? "text" : "password"}
         className={"password-input"}
+      />
+      <IconButton
+        icon={visible ? <EyeIcon /> : <EyeOffIcon />}
+        onClick={changeVisibility}
+        className={"password-eye"}
       />
     </div>
   );

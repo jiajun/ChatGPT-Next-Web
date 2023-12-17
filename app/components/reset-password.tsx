@@ -7,6 +7,8 @@ import { getHeaders } from "../client/api";
 import Locale from "../locales";
 import md5 from "spark-md5";
 import { useState } from "react";
+import EyeIcon from "../icons/eye.svg";
+import EyeOffIcon from "../icons/eye-off.svg";
 
 import BotIcon from "../icons/bot.svg";
 
@@ -18,6 +20,16 @@ export function ResetPassword() {
   const [resetPassword, setPassword] = useState("");
   const [resetNewPassword, setNewPassword] = useState("");
   const [resultMsg, setResultMsg] = useState("");
+  const [visible1, setVisible1] = useState(false);
+  const [visible2, setVisible2] = useState(false);
+
+  function changeVisibility1() {
+    setVisible1(!visible1);
+  }
+
+  function changeVisibility2() {
+    setVisible2(!visible2);
+  }
 
   const updatePassword = async () => {
     const result = await fetch("/api/openai/resetPassword", {
@@ -60,26 +72,39 @@ export function ResetPassword() {
           setResetUserName(e.currentTarget.value);
         }}
       />
+      <div className={"password-input-container"}>
+        <input
+          className={styles["auth-input"]}
+          type={visible1 ? "text" : "password"}
+          placeholder={Locale.ResetPassword.Password}
+          value={resetPassword}
+          onChange={(e) => {
+            setPassword(e.currentTarget.value);
+          }}
+        />
+        <IconButton
+          icon={visible1 ? <EyeIcon /> : <EyeOffIcon />}
+          onClick={changeVisibility1}
+          className={"password-eye"}
+        />
+      </div>
 
-      <input
-        className={styles["auth-input"]}
-        type="password"
-        placeholder={Locale.ResetPassword.Password}
-        value={resetPassword}
-        onChange={(e) => {
-          setPassword(e.currentTarget.value);
-        }}
-      />
-
-      <input
-        className={styles["auth-input"]}
-        type="password"
-        placeholder={Locale.ResetPassword.NewPassword}
-        value={resetNewPassword}
-        onChange={(e) => {
-          setNewPassword(e.currentTarget.value);
-        }}
-      />
+      <div className={"password-input-container"}>
+        <input
+          className={styles["auth-input"]}
+          type={visible2 ? "text" : "password"}
+          placeholder={Locale.ResetPassword.NewPassword}
+          value={resetNewPassword}
+          onChange={(e) => {
+            setNewPassword(e.currentTarget.value);
+          }}
+        />
+        <IconButton
+          icon={visible2 ? <EyeIcon /> : <EyeOffIcon />}
+          onClick={changeVisibility2}
+          className={"password-eye"}
+        />
+      </div>
 
       <div className={styles["reset-msg-result"]}>{resultMsg}</div>
 
