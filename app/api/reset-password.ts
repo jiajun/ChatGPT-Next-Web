@@ -15,7 +15,8 @@ function getIP(req: NextRequest) {
 const clientCode = process.env.CLIENT_CODE;
 
 export async function ResetPassword(req: NextRequest) {
-  const authToken = req.headers.get("Authorization") ?? "";
+  let authToken = req.headers.get("Authorization") ?? "";
+  authToken = authToken.substring(7, authToken.length);
 
   const serverConfig = getServerSideConfig();
 
@@ -27,6 +28,7 @@ export async function ResetPassword(req: NextRequest) {
   console.log("[Time] ", new Date().toLocaleString());
   console.log("[clientCode]", clientCode);
   console.log("[req.body]", body);
+  console.log("[authToken]", authToken);
 
   const results = await fetch("http://localhost:7001/uac/user/resetPassword", {
     method: "POST",
@@ -38,7 +40,7 @@ export async function ResetPassword(req: NextRequest) {
     }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: authToken,
+      token: authToken,
     },
   });
 

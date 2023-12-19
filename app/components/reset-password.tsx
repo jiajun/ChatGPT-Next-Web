@@ -39,6 +39,7 @@ export function ResetPassword() {
         password: md5.hash(resetPassword),
         newPassword: md5.hash(resetNewPassword),
       }),
+      headers: getHeaders(),
     });
 
     const resultJson = await result.json();

@@ -21,7 +21,7 @@ const cn = {
     Title: "重置密码",
     Tips: "请在下方填入用户名，密码和新密码",
     UserName: "在此处填写用户名",
-    Password: "在此处填写密码",
+    Password: "在此处填写旧密码",
     NewPassword: "在此处填写新密码",
     Confirm: "确认",
     Later: "稍后再说",
